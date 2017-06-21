@@ -1,5 +1,6 @@
 create table temp (
   id integer primary key autoincrement
-  , temp text
+  , office_temp number
+  , local_temp number
   , logged timestamp
-)
+);

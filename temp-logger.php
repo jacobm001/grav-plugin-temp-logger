@@ -41,17 +41,16 @@ class TempLoggerPlugin extends Plugin
 
         $this->init_db();
 
+        date_default_timezone_set('America/Los_Angeles');
+
         $uri        = $this->grav['uri'];
         $path_new   = $this->config->get('plugins.temp-logger.path_new');
-        $local_temp = $this->get_local_temp('Corvallis', 'OR');
 
         if( $uri->path() == $path_new ) {
-            date_default_timezone_set('America/Los_Angeles');
+            $local_temp   = $this->get_local_temp('Corvallis', 'OR');
+            $current_date = date("m-d-y H:i");
 
-            $f = fopen(DATA_DIR . "temper.csv" , "a");
-            $str = date("m-d-y H:i") . "," . $_GET['temp'] . "\n";
-            fwrite($f, $str);
-            fclose($f);
+            $this->record_temp($_GET['temp'], $local_temp, $current_date);
         }
     }
 
@@ -91,6 +90,24 @@ class TempLoggerPlugin extends Plugin
 
     public function get_local_temp($city, $state)
     {
+        $str = 'http://api.wunderground.com/api/e4843bb2e60109cd/conditions/q/%s/%s.json';
+        $url = sprintf($str, $state, $city);
         
+        $r = file_get_contents($url);
+        $r = json_decode($r);
+
+        return $r->current_observation->temp_f;
+    }
+
+    public function record_temp($measured, $local, $current_date)
+    {
+        $query = 'insert into temp(office_temp, local_temp, logged) values(?,?,?)';
+        $stmt  = $this->db->prepare($query);
+
+        $stmt->bindParam(1, $measured);
+        $stmt->bindParam(2, $local);
+        $stmt->bindParam(3, $current_date);
+
+        $stmt->execute();
     }
 }
