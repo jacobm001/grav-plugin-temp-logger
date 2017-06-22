@@ -29,6 +29,14 @@ form:
       type: text
       label: API Key
       help: API Key to get local weather
+    state:
+      type: text
+      label: State
+      help: State for weather API
+    city:
+      type: text
+      label: City
+      help: City for weather API
     path_new:
       type: text
       label: Path

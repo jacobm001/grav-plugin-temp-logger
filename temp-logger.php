@@ -47,7 +47,7 @@ class TempLoggerPlugin extends Plugin
         $path_new   = $this->config->get('plugins.temp-logger.path_new');
 
         if( $uri->path() == $path_new ) {
-            $local_temp   = $this->get_local_temp('Corvallis', 'OR');
+            $local_temp   = $this->get_local_temp();
             $current_date = date("m-d-y H:i");
 
             $this->record_temp($_GET['temp'], $local_temp, $current_date);
@@ -69,7 +69,7 @@ class TempLoggerPlugin extends Plugin
             $this->grav['debugger']->addMessage($e);
             die("Cannot deal with database");
         }
-        
+
         return true;
     }
 
@@ -87,12 +87,15 @@ class TempLoggerPlugin extends Plugin
         return;
     }
 
-    public function get_local_temp($city, $state)
+    public function get_local_temp()
     {
         $str = 'http://api.wunderground.com/api/%s/conditions/q/%s/%s.json';
         
-        $key = $this->config->get('plugins.temp-logger.api_key');
-        $url = sprintf($str, $key, $state, $city);
+        $key   = $this->config->get('plugins.temp-logger.api_key');
+        $state = $this->config->get('plugins.temp-logger.state');
+        $city  = $this->config->get('plugins.temp-logger.city');
+        
+        $url   = sprintf($str, $key, $state, $city);
         
         $r = file_get_contents($url);
         $r = json_decode($r);
