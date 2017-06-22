@@ -81,7 +81,6 @@ class TempLoggerPlugin extends Plugin
         } 
         catch(Exception $e) {
             $this->grav['debugger']->addMessage($e);
-
             die("Cannot build database");
         }
 
@@ -90,8 +89,10 @@ class TempLoggerPlugin extends Plugin
 
     public function get_local_temp($city, $state)
     {
-        $str = 'http://api.wunderground.com/api/e4843bb2e60109cd/conditions/q/%s/%s.json';
-        $url = sprintf($str, $state, $city);
+        $str = 'http://api.wunderground.com/api/%s/conditions/q/%s/%s.json';
+        
+        $key = $this->config->get('plugins.temp-logger.api_key');
+        $url = sprintf($str, $key, $state, $city);
         
         $r = file_get_contents($url);
         $r = json_decode($r);

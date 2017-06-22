@@ -25,6 +25,10 @@ form:
         0: Disabled
       validate:
         type: bool
+    api_key:
+      type: text
+      label: API Key
+      help: API Key to get local weather
     path_new:
       type: text
       label: Path
