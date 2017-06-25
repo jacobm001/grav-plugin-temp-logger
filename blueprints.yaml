@@ -1,7 +1,7 @@
 name: Temp Logger
 version: 0.1.0
 description: Used to track the temperature of my office over time.
-icon: plug
+icon: thermometer-half
 author:
   name: Jacob Mastel
   email: jacobm001@gmail.com
